@@ -1,0 +1,20 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: quotes-app-ingress
+  labels:
+    app: quotes-app
+    tier: backend
+    environment: dev
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - host: quotes-app.info
+  # - host: quotes-app.k8s.fluxit.com.ar
+    http:
+      paths:
+      - backend:
+          serviceName: quotes-app-service
+          servicePort: 80
+        path: /quotes

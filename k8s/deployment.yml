@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: quotes-app-deployment
+  labels:
+    app: quotes-app
+    tier: backend
+    environment: dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: quotes-app
+  template:
+    metadata:
+      labels:
+        app: quotes-app
+        tier: backend
+    spec:
+      containers:
+      - name: quotes-app
+        image: martinsaporiti/quotes-app:1.0.1
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3000
+        env:
+        - name: HOST
+          value: "mongo-service"
+        - name: PORT
+          value: "27017"
