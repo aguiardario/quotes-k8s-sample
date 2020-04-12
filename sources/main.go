@@ -68,7 +68,6 @@ func home(w http.ResponseWriter, r *http.Request) {
 
 	uriMongo := getConnectionString()
 
-	log.Println("Entrando a home")
 	// ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
 
 	// clientOpts := options.Client().ApplyURI(fmt.Sprintf("mongodb://%s:%d", host, port))
@@ -109,6 +108,7 @@ func home(w http.ResponseWriter, r *http.Request) {
 	}
 
 	log.Println(string(jsonResult))
+	w.WriteHeader(http.StatusOK)
 	w.Header().Set("Content-Type", "application/json")
 	w.Write(jsonResult)
 
@@ -140,7 +140,6 @@ func connect() {
 
 	count, _ := collection.EstimatedDocumentCount(context.TODO())
 
-	fmt.Println(count)
 	if count == 0 {
 
 		for _, q := range quotes {
