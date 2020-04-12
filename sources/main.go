@@ -1,3 +1,5 @@
+//Package main se encarga de retornar quotes de autores famosos.
+// Si no hay frases cargadas, popula la base de datos con 6 quotes.
 package main
 
 import (
@@ -23,6 +25,7 @@ var quotes = [6]string{
 	"Un líder es alguien a quien sigues a un lugar al que no irías por ti mismo (Joel Arthur Barker)",
 }
 
+//Quote es la estructura que se serializa y se retorna en formato json.
 type Quote struct {
 	// ID    string
 	Quote string
@@ -53,12 +56,12 @@ func getConnectionString() string {
 	}
 
 	if user != "" {
-		user = user + ":" + pwd
+		user = user + ":" + pwd + "@"
 	}
 
 	// fmt.Println("mongodb://%s:%s@%s:%s", user, pwd, host, port)
 	fmt.Println("mongodb://" + user + "@" + host + ":" + port + "/" + dbName)
-	return fmt.Sprintf("mongodb://" + user + "@" + host + ":" + port + "/" + dbName)
+	return fmt.Sprintf("mongodb://" + user + host + ":" + port + "/" + dbName)
 }
 
 func home(w http.ResponseWriter, r *http.Request) {
