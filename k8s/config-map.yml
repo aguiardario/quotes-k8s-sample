@@ -1,0 +1,11 @@
+kind: ConfigMap 
+apiVersion: v1 
+metadata:
+  name: configmap
+  labels:
+    app: quotes-app
+    tier: backend
+    environment: dev
+data:
+  HOST: mongo-service
+  PORT: "27017"

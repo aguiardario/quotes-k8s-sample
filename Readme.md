@@ -35,7 +35,7 @@ kubectl get pods --namespace=quotes-app-ns
 kubectl describe deployment/quotes-app-deployment --namespace=quotes-app-ns
 
 ```
-Para acceder a la base de datos desde afuera del cluster:
+## Para acceder a la base de datos desde afuera del cluster:
 
 #### Opción 1
 
@@ -62,6 +62,11 @@ kubectl run --generator=run-pod/v1 -it --rm load-generator --image=busybox /bin/
 Luego podés acceder al servicio desde el bash del bastión.
 
 
+### configMap
+
+```
+kubectl apply -f ./k8s/config-map.yml --namespace=quotes-app-ns
+```
 
 
 ### Deployment

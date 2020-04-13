@@ -7,10 +7,13 @@ metadata:
     tier: backend
     environment: dev
 spec:
+  type: NodePort
   ports:
-  - port: 27017
-    targetPort: 27017
-    protocol: TCP
+    - nodePort: 30001
+      port: 27017
+      targetPort: 27017
+      protocol: TCP
+      name: http
   selector:
     run: mongo
     tier: backend
@@ -43,15 +46,3 @@ spec:
         image: mongo:3.6.4
         ports:
         - containerPort: 27017
-
-
-
-
-
-
-
-
-
-
-
-
