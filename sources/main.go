@@ -6,12 +6,15 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"math/rand"
 	"net/http"
 	"os"
 	"time"
 
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -27,8 +30,8 @@ var quotes = [6]string{
 
 //Quote es la estructura que se serializa y se retorna en formato json.
 type Quote struct {
-	// ID    string
-	Quote string
+	ID    primitive.ObjectID `bson:"_id, omitempty"`
+	Quote string             `json:"quote"`
 }
 
 func getConnectionString() string {
@@ -91,15 +94,37 @@ func home(w http.ResponseWriter, r *http.Request) {
 
 	count, _ := collection.EstimatedDocumentCount(context.TODO())
 
+	fmt.Println(count)
 	magic := rand.Intn(int(count))
-	quote := quotes[magic]
-	log.Println(quote)
 
-	res := &Quote{
-		Quote: quote,
+	cur, err := collection.Find(context.TODO(), bson.D{})
+	defer cur.Close(context.TODO())
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		log.Println("Error")
 	}
 
-	jsonResult, err := json.Marshal(res)
+	var results []Quote
+	for cur.Next(context.TODO()) {
+		//Create a value into which the single document can be decoded
+		var elem Quote
+		err := cur.Decode(&elem)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			log.Println("Error")
+		}
+
+		results = append(results, elem)
+	}
+
+	quote := results[magic]
+
+	// res := &Quote{
+	// 	Quote: quote.Quote,
+	// }
+
+	jsonResult, err := json.Marshal(quote)
 
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -163,10 +188,21 @@ func connect() {
 
 }
 
+func HealthCheckHandler(w http.ResponseWriter, r *http.Request) {
+	// A very simple health check.
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/json")
+
+	// In the future we could report back on the status of our DB, or our cache
+	// (e.g. Redis) by performing a simple PING, and include them in the response.
+	io.WriteString(w, `{"alive": true}`)
+}
+
 func main() {
 
 	connect()
 	http.HandleFunc("/", home)
+	http.HandleFunc("/check", HealthCheckHandler)
 	// p := properties.MustLoadFile("config.properties", properties.UTF8)
 	// port := ":" + p.GetString("port", "3000")
 	port := ":3000"

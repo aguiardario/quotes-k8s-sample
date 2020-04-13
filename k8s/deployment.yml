@@ -19,7 +19,7 @@ spec:
     spec:
       containers:
       - name: quotes-app
-        image: martinsaporiti/quotes-app:1.0.1
+        image: martinsaporiti/quotes-app:1.0.2
         imagePullPolicy: Always
         ports:
         - containerPort: 3000

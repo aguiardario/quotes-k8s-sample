@@ -35,6 +35,31 @@ kubectl get pods --namespace=quotes-app-ns
 kubectl describe deployment/quotes-app-deployment --namespace=quotes-app-ns
 
 ```
+Para acceder a la base de datos desde afuera del cluster:
+
+#### Opción 1
+
+Opcion1: ponerle NodePort y tomá un puerto alto y entrás con
+```
+k8s.fluxit.com.ar:PUERTOALTO
+```
+Opción 2: Ingress
+
+Opcion3: Port Foward
+
+```
+kubectl port-forward nombredelpod 27017:27017
+
+Luego entrás con localhost:27017
+```
+
+Opción 4: Bastión
+
+```
+kubectl run --generator=run-pod/v1 -it --rm load-generator --image=busybox /bin/sh
+```
+
+Luego podés acceder al servicio desde el bash del bastión.
 
 
 
