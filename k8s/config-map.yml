@@ -7,5 +7,5 @@ metadata:
     tier: backend
     environment: dev
 data:
-  HOST: mongo-service
+  HOST: mongo-superpowers-svc
   PORT: "27017"
