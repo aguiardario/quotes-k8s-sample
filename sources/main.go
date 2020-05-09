@@ -167,20 +167,19 @@ func connect() {
 
 	if count == 0 {
 
+		var quotesToInsert []interface{}
 		for _, q := range quotes {
 
 			quote := Quote{
+				ID:    primitive.NewObjectID(),
 				Quote: q,
 			}
 
-			insertResult, err := collection.InsertOne(context.TODO(), quote)
+			quotesToInsert = append(quotesToInsert, quote)
 
-			if err != nil {
-				log.Fatal(err)
-			}
-
-			log.Println("Death Star had been inserted: ", insertResult.InsertedID)
 		}
+
+		collection.InsertMany(context.TODO(), quotesToInsert)
 
 	}
 
