@@ -1,10 +1,10 @@
 
-### Cosntruir la imagen Docker a utilizar
+### Construir la imagen Docker a utilizar
 
 ```
 cd source
 go build
-docker build -t quotes:1.0.1
+docker build -t quotes:1.0.1 .
 ```
 
 
